@@ -17,36 +17,24 @@
   width: 750rpx;
   height: 500rpx;
   z-index: -1;
- 
 }
 
 /* 轮播图 */
 
-
 /* 置顶文章 */
-
 
 .sticky-list {
   height: 130rpx;
   overflow: hidden;
 }
 
- 
-
-
-
-
-
-
 .sticky-list-item-title {
   display: block;
- 
+
   overflow: hidden;
 }
 
- 
 /* 图标导航 */
-
 
 .ui-item {
   display: block;
@@ -63,7 +51,6 @@
 }
 
 .ui-item text {
-
   color: #333;
   font-weight: 300;
 }
@@ -77,7 +64,7 @@
   margin-bottom: 15rpx;
 }
 
-.ui-search-bar .ui-search-action+.ui-search-form {
+.ui-search-bar .ui-search-action + .ui-search-form {
   margin-left: 20rpx;
 }
 
@@ -90,8 +77,6 @@
   color: #333;
   height: 68rpx;
   font-size: 24rpx;
-
-
 }
 
 .ui-search-icon,
@@ -109,8 +94,6 @@
   position: relative;
   flex: 1;
   height: 68rpx;
-
-
 }
 
 .ui-search-text-left {
@@ -135,12 +118,13 @@
   margin-right: 25rpx;
 }
 
-.ui-search-bar .ui-search-form+.ui-search-action {
+.ui-search-bar .ui-search-form + .ui-search-action {
   margin-left: 20rpx;
 }
 
-
-
+.alipay {
+  background-color: transparent;
+}
 
 /*模块标题样式 */
 .common-subtitle {
@@ -168,7 +152,6 @@
 
 /* 精选栏目菜单导航 */
 
-
 .selected-nav-list {
   display: flex;
   padding: 0 24rpx 40rpx;
@@ -194,8 +177,8 @@
 }
 
 .list-item-ad {
-  margin: 24rpx; 
- 
+  margin: 24rpx;
+
   overflow: hidden;
   border-radius: var(--radius);
 }
@@ -213,12 +196,12 @@
   box-shadow: 0 16rpx 30rpx -12rpx rgba(88, 88, 88, 0.2);
 }
 
-.addMyMiniapp>view {
+.addMyMiniapp > view {
   font-size: 24rpx;
   font-weight: 500;
 }
 
-.addMyMiniapp>text {
+.addMyMiniapp > text {
   font-size: 20rpx;
   font-weight: 200;
 }

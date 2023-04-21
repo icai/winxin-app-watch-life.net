@@ -1,6 +1,6 @@
-import util from "../../utils/util.js";
-import Api from '../../utils/api.js';
-import wxRequest from '../../utils/wxRequest.js';
+import util from '../../utils/util.js'
+import Api from '../../utils/api.js'
+import wxRequest from '../../utils/wxRequest.js'
 const regDate = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/
 
 Component({
@@ -11,7 +11,7 @@ Component({
   },
 
   lifetimes: {
-    attached: function () { },
+    attached: function () {}
   },
 
   methods: {
@@ -25,55 +25,48 @@ Component({
     },
 
     init() {
-      this.setData({activeTab:0});
+      this.setData({ activeTab: 0 })
       this.getChannelsInfo()
       this.getChannelsActivity()
     },
 
     getChannelsInfo() {
       var self = this
-      const res =  wxRequest.getRequest(Api.getChannelsInfo()).then(res => {
-        const channelsId = res.data.channelsId;
+      const res = wxRequest.getRequest(Api.getChannelsInfo()).then((res) => {
+        const channelsId = res.data.channelsId
         self.setData({
           info: res.data || {}
         })
-        var channelsLiveInfo = '';
+        var channelsLiveInfo = ''
         wx.getChannelsLiveInfo({
           finderUserName: channelsId,
           success(resLive) {
-            channelsLiveInfo = resLive;
-            self.setData({ channelsLiveInfo });
+            channelsLiveInfo = resLive
+            self.setData({ channelsLiveInfo })
           }
         })
         var channelsLiveNoticeInfo = ''
         wx.getChannelsLiveNoticeInfo({
           finderUserName: channelsId,
           success(resLiveNotice) {
-            channelsLiveNoticeInfo = resLiveNotice;
-            channelsLiveNoticeInfo.startTime = util.datefomate(
-              channelsLiveNoticeInfo.startTime,
-              "MM-dd HH:mm"
-            )
-            self.setData({ channelsLiveNoticeInfo });
+            channelsLiveNoticeInfo = resLiveNotice
+            channelsLiveNoticeInfo.startTime = util.datefomate(channelsLiveNoticeInfo.startTime, 'MM-dd HH:mm')
+            self.setData({ channelsLiveNoticeInfo })
           }
         })
-
       })
-
-
     },
     //预约直播
     reserveChannelsLive(e) {
-      var noticeId = e.currentTarget.dataset.noticeid;
+      var noticeId = e.currentTarget.dataset.noticeid
       wx.reserveChannelsLive({
         noticeId: noticeId
       })
-
     },
 
     // 跳转视频号直播
-    redictChannelsLive(e) {      
-      var channelsId = e.currentTarget.dataset.channelsid;
+    redictChannelsLive(e) {
+      var channelsId = e.currentTarget.dataset.channelsid
       wx.openChannelsLive({
         finderUserName: channelsId
       })
@@ -81,39 +74,33 @@ Component({
 
     getChannelsActivity() {
       let self = this
-      wxRequest.getRequest(Api.getChannelsActivity()).then(res=>{
+      wxRequest.getRequest(Api.getChannelsActivity()).then((res) => {
         let list = res.data || []
-        if (list.length) list = list.map(m => {
+        if (list.length)
+          list = list.map((m) => {
             if (m.creatdate) {
-              m.creatdateName = regDate.test(m.creatdate)
-                ?
-                m.creatdate.replace(regDate, '$2-$3 $4:$5')
-                :
-                m.creatdate
+              m.creatdateName = regDate.test(m.creatdate) ? m.creatdate.replace(regDate, '$2-$3 $4:$5') : m.creatdate
             }
 
             return m
           })
 
         self.setData({ list })
-      }) 
+      })
     },
 
     getChannelsEvent() {
       let self = this
-      wxRequest.getRequest(Api.getChannelsEvent()).then(res=>{
+      wxRequest.getRequest(Api.getChannelsEvent()).then((res) => {
         let list = res.data || []
-        if (list.length) list = list.map(m => {
-          if (m.enddate) {
-            m.enddateName = regDate.test(m.enddate)
-              ?
-              m.enddate.replace(regDate, '$2-$3 $4:$5')
-              :
-              m.enddate
-          }
+        if (list.length)
+          list = list.map((m) => {
+            if (m.enddate) {
+              m.enddateName = regDate.test(m.enddate) ? m.enddate.replace(regDate, '$2-$3 $4:$5') : m.enddate
+            }
 
-          return m
-        })
+            return m
+          })
 
         self.setData({ list })
       })
@@ -130,17 +117,16 @@ Component({
     },
 
     openUserProfile(e) {
-      let channelsId = e.currentTarget.dataset.channelsid;
+      let channelsId = e.currentTarget.dataset.channelsid
       wx.openChannelsUserProfile({
         finderUserName: channelsId
       })
     },
 
     goto(e) {
-      let channelsId = e.currentTarget.dataset.channelsid;
-      let feedId = e.currentTarget.dataset.feedid;
-      let eventId = e.currentTarget.dataset.eventid;
-
+      let channelsId = e.currentTarget.dataset.channelsid
+      let feedId = e.currentTarget.dataset.feedid
+      let eventId = e.currentTarget.dataset.eventid
 
       // 视频
       if (this.data.activeTab === 0) {
@@ -157,6 +143,6 @@ Component({
           eventId: eventId
         })
       }
-    },
+    }
   }
 })

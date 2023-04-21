@@ -1,7 +1,6 @@
 {
- 
   "usingComponents": {
     "scan-login": "/components/scan-login/scan-login",
-    "ui-popover" : "/mp-cu/colorUI/components/ui-modal/ui-modal"
+    "ui-popover": "/mp-cu/colorUI/components/ui-modal/ui-modal"
   }
 }

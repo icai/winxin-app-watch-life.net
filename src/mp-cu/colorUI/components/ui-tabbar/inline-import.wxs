@@ -1,7 +1,6 @@
-
-    var indexOf = function (item) {
-        return item.indexOf('/') !== -1
-    }
-    module.exports = {
-        indexOf: indexOf
-    }
+var indexOf = function (item) {
+  return item.indexOf('/') !== -1
+}
+module.exports = {
+  indexOf: indexOf
+}

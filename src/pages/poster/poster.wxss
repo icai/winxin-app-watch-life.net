@@ -1,4 +1,3 @@
-
 /*
  * 
  * 微慕小程序开源版
@@ -10,24 +9,23 @@
  * 
  */
 
-
- .wrapper{
+.wrapper {
   padding: 5rpx;
   border: 2rpx solid #eee;
-  margin-top: 10rpx; 
- -webkit-box-shadow: 3px 3px 3px;  
-  -moz-box-shadow: 3px 3px 3px;  
-  box-shadow: 3px 3px 3px #eee;  
+  margin-top: 10rpx;
+  -webkit-box-shadow: 3px 3px 3px;
+  -moz-box-shadow: 3px 3px 3px;
+  box-shadow: 3px 3px 3px #eee;
 }
-.posterimage{
-    width: 100%;
-    height:100%
+.posterimage {
+  width: 100%;
+  height: 100%;
 }
 
 .gotowebpage-button {
   font-size: 0.785714286rem;
   font-weight: normal;
-  color:  #fff;
+  color: #fff;
   background-color: #118fff;
   background-repeat: repeat-x;
   line-height: 80rpx;
@@ -37,6 +35,6 @@
   border-radius: 60rpx;
 }
 
-.gotowebpage-button::after{
-   border: none; 
+.gotowebpage-button::after {
+  border: none;
 }

@@ -1,39 +1,37 @@
 Component({
-    options: {
-        addGlobalClass: true,
-        //multipleSlots: true
+  options: {
+    addGlobalClass: true
+    //multipleSlots: true
+  },
+  properties: {
+    ui: {
+      type: String,
+      value: ''
     },
-    properties: {
-        ui:{
-            type: String,
-            value: ''
-        },
-        bg: {
-            type: String,
-            value: 'ui-BG'
-        },
-        border: {
-            type: Boolean,
-            optionalTypes: String,
-            value: false
-        },
-        smBorder: {
-            type: Boolean,
-            optionalTypes: String,
-            value: false
-        },
-        shadow: {
-            type: Boolean,
-            optionalTypes: String,
-            value: false
-        },
-        radius: {
-            type: Boolean,
-            optionalTypes: String,
-            value: false
-        },
+    bg: {
+      type: String,
+      value: 'ui-BG'
     },
-    methods: {
-
+    border: {
+      type: Boolean,
+      optionalTypes: String,
+      value: false
+    },
+    smBorder: {
+      type: Boolean,
+      optionalTypes: String,
+      value: false
+    },
+    shadow: {
+      type: Boolean,
+      optionalTypes: String,
+      value: false
+    },
+    radius: {
+      type: Boolean,
+      optionalTypes: String,
+      value: false
     }
+  },
+  methods: {}
 })

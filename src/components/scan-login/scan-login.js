@@ -1,8 +1,8 @@
 const app = getApp()
-import config from '../../utils/config.js';
-import pro_API from '../../utils/api.js';
-import wxRequest from '../../utils/wxRequest.js';
-import freeplus_Api from '../../utils/api.js';
+import config from '../../utils/config.js'
+import pro_API from '../../utils/api.js'
+import wxRequest from '../../utils/wxRequest.js'
+import freeplus_Api from '../../utils/api.js'
 
 Component({
   /**
@@ -32,52 +32,52 @@ Component({
   methods: {
     // 跳转
     scanQRCodeLogin(e) {
-      var sessionId = "";
-      var source=this.data.source;
+      var sessionId = ''
+      var source = this.data.source
       if (source == 'pro') {
-        let userInfo = wx.getStorageSync('userSession');
+        let userInfo = wx.getStorageSync('userSession')
         if (!userInfo.userId || !userInfo.sessionId) {
           wx.showToast({
             icon: 'none',
             title: '没有登录无法使用'
           })
-          return;
+          return
         } else {
-          sessionId = userInfo.sessionId;
+          sessionId = userInfo.sessionId
         }
       } else if (source == 'free' || source == 'plus') {
-        var openid = wx.getStorageSync('openid');
+        var openid = wx.getStorageSync('openid')
         if (!openid) {
           wx.showToast({
             icon: 'none',
             title: '没有登录无法使用'
           })
-          return;
+          return
         } else {
-          sessionId = openid;
+          sessionId = openid
         }
       }
 
       wx.scanCode({
         onlyFromCamera: true,
         scanType: ['qrCode'],
-        success: res => {
-          var qrcode = res.result;
+        success: (res) => {
+          var qrcode = res.result
           if (qrcode.length != 16) {
             wx.showToast({
               icon: 'none',
               title: '无效的二维码'
             })
-            return;
+            return
           }
           let params = {
             sessionid: sessionId,
             qrcode: qrcode,
             action: 'scan'
           }
-          console.log(params);
-          if (source== 'pro') {
-            pro_API.scanQrcode(params).then(res => {
+          console.log(params)
+          if (source == 'pro') {
+            pro_API.scanQrcode(params).then((res) => {
               if (res.success == true) {
                 wx.showModal({
                   title: '提示',
@@ -89,11 +89,11 @@ Component({
                         qrcode: qrcode,
                         action: 'confirm'
                       }
-                      pro_API.scanQrcode(params).then(res => {
+                      pro_API.scanQrcode(params).then((res) => {
                         if (res.success == true) {
                           wx.showToast({
                             title: '已登录',
-                            icon: 'none',
+                            icon: 'none'
                           })
                         }
                       })
@@ -103,13 +103,13 @@ Component({
                   }
                 })
               }
-            });
+            })
           } else if (source == 'free' || source == 'plus') {
-            var url = freeplus_Api.scanQrcode();
-            var postScanQrcode = wxRequest.postRequest(url, params);
-            postScanQrcode.then(res => {
+            var url = freeplus_Api.scanQrcode()
+            var postScanQrcode = wxRequest.postRequest(url, params)
+            postScanQrcode.then((res) => {
               if (res.data.success == true) {
-                console.log(res.data);
+                console.log(res.data)
                 wx.showModal({
                   title: '提示',
                   content: '确认使用当前账号登录网站？',
@@ -120,17 +120,16 @@ Component({
                         qrcode: qrcode,
                         action: 'confirm'
                       }
-                      postScanQrcode = wxRequest.postRequest(url, params);
-                      postScanQrcode.then(res => {
-                        console.log(res.data);
+                      postScanQrcode = wxRequest.postRequest(url, params)
+                      postScanQrcode.then((res) => {
+                        console.log(res.data)
                         if (res.data.success == true) {
                           wx.showToast({
                             title: '已登录',
-                            icon: 'none',
+                            icon: 'none'
                           })
                         }
                       })
-
                     } else if (res.cancel) {
                       console.log('用户点击取消')
                     }

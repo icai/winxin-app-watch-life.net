@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+if [ -d "/usr/local/bin" ]; then
+  PATH="/usr/local/bin:$PATH"
+fi
+
+npx lint-staged

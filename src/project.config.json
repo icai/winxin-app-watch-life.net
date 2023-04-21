@@ -36,9 +36,7 @@
     "disableUseStrict": false,
     "minifyWXML": true,
     "showES6CompileOption": false,
-    "useCompilerPlugins": [
-      "sass"
-    ],
+    "useCompilerPlugins": ["sass"],
     "useStaticServer": true
   },
   "compileType": "miniprogram",

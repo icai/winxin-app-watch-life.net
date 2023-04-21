@@ -9,8 +9,6 @@
  * Copyright (c) 2017  微慕 https://www.minapper.com All rights reserved.
  */
 
-
-
 .list-header {
   padding: 50rpx 0;
   text-align: left;
@@ -34,12 +32,12 @@
   overflow: hidden;
   clear: both;
   border: 1px solid #ccc;
- 
+
   margin-bottom: 30rpx;
   background: #fff;
 }
 
-.topic-list-item  image.cover {
+.topic-list-item image.cover {
   width: 100%;
   height: 300rpx;
 }
@@ -75,7 +73,7 @@
 /* tab选项卡 */
 
 .tab-bar {
-  height: 100rpx; 
+  height: 100rpx;
   display: flex;
   margin-bottom: 24rpx;
 }
@@ -83,7 +81,7 @@
 .tab-item {
   flex: 1;
   display: inline-block;
- 
+
   text-align: center;
   line-height: 100rpx;
   font-size: 30rpx;
@@ -93,7 +91,7 @@
 
 .tab-Selected {
   position: relative;
-  color:var(--ui-BG-Main) !important;
+  color: var(--ui-BG-Main) !important;
   font-weight: 500;
 }
 

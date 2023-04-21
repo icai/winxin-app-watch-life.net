@@ -135,7 +135,7 @@
 
 .NormalRoomItem .NormalRoomItem-show:after {
   display: block;
-  content: "";
+  content: '';
   padding-top: 56.25%;
 }
 
@@ -179,7 +179,7 @@
   z-index: 10;
   width: 100%;
   padding: 5px 0 10px;
-  background: linear-gradient( rgba(0, 0, 0, 0.8), transparent);
+  background: linear-gradient(rgba(0, 0, 0, 0.8), transparent);
   font-size: 10px;
   color: #fff;
 }

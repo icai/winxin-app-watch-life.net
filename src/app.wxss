@@ -11,7 +11,7 @@
 @import 'images/iconfont/iconfont.wxss';
 @import 'mp-cu/colorUI/scss/ui';
 page {
-  --radius:12rpx;
+  --radius: 12rpx;
 }
 
 ad {
@@ -25,10 +25,10 @@ image {
 .sticky-list-item {
   overflow: hidden;
   display: block;
-  height: 60rpx!important;
- line-height: 60rpx ;
- max-height:60rpx ;
-  padding: 4rpx 0; 
+  height: 60rpx !important;
+  line-height: 60rpx;
+  max-height: 60rpx;
+  padding: 4rpx 0;
 }
 .dot {
   float: left;
@@ -37,17 +37,15 @@ image {
   font-size: 0;
   margin: 22rpx 12rpx 10rpx 16rpx;
 }
-.ui-BG-card{
+.ui-BG-card {
   margin: 24rpx;
   padding: 24rpx;
   border-radius: var(--radius);
-  box-shadow:rgba(12, 12, 12, 0.03) 0px 2px 15px -5px;
- 
+  box-shadow: rgba(12, 12, 12, 0.03) 0px 2px 15px -5px;
 }
 .heading-3 {
-  padding-top: 10rpx!important;
-  margin: 0 0 10rpx!important; 
- 
+  padding-top: 10rpx !important;
+  margin: 0 0 10rpx !important;
 }
 .header {
   padding: 50rpx 0;
@@ -55,7 +53,7 @@ image {
   font-weight: normal;
   font-size: 30rpx;
   line-height: 40rpx;
- 
+
   border-bottom: 2rpx solid #ededed;
   margin-bottom: 8rpx;
 }
@@ -96,10 +94,8 @@ image {
 
 /* 文章列表样式 */
 
- 
-
 .post-item {
-  display: flex; 
+  display: flex;
 
   overflow: hidden;
 }
@@ -123,8 +119,7 @@ image {
   margin-bottom: 20rpx;
 }
 
-.post-title>text {
- 
+.post-title > text {
   text-overflow: -o-ellipsis-lastline;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -138,16 +133,14 @@ image {
   align-items: center;
 }
 
-.post-data>image {
+.post-data > image {
   width: 24rpx;
   height: 24rpx;
   margin-right: 6rpx;
 }
 
-.post-data>text {
- 
+.post-data > text {
   margin-right: 32rpx;
- 
 }
 
 /*common list end */
@@ -193,7 +186,7 @@ image {
 .sk-three-bounce .sk-child {
   width: 30rpx;
   height: 30rpx;
- 
+
   border-radius: 100%;
   display: inline-block;
   -webkit-animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;
@@ -211,7 +204,9 @@ image {
 }
 
 @-webkit-keyframes sk-three-bounce {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     -webkit-transform: scale(0);
     transform: scale(0);
   }
@@ -223,7 +218,9 @@ image {
 }
 
 @keyframes sk-three-bounce {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     -webkit-transform: scale(0);
     transform: scale(0);
   }
@@ -242,7 +239,7 @@ image {
 
 .login-popup-wrapper {
   margin: 0 60rpx;
- 
+
   overflow: hidden;
   border-radius: var(--radius);
 }
@@ -259,7 +256,6 @@ image {
 }
 
 .login-popup .login-inner {
- 
   padding: 48rpx;
 }
 
@@ -272,7 +268,7 @@ image {
   height: 50px;
   margin-right: 10px;
   flex-shrink: 0;
-border-radius: 500px;
+  border-radius: 500px;
 }
 
 .login-inner .close-btn {
@@ -281,7 +277,6 @@ border-radius: 500px;
 }
 
 .login-inner .username {
- 
   font-size: 32rpx;
   font-weight: 500;
   display: flex;
@@ -305,11 +300,10 @@ border-radius: 500px;
   border-radius: 0;
   font-size: 15px;
   line-height: 3;
- 
 }
 
 .login-btn-box button:first-child {
-  border-right: 1px solid   var(--ui-TC-3);
+  border-right: 1px solid var(--ui-TC-3);
 }
 
 .login-btn-box button::after {
@@ -395,11 +389,11 @@ border-radius: 500px;
 }
 
 .zan-popup {
-  visibility: hidden
+  visibility: hidden;
 }
 
 .zan-popup--show {
-  visibility: visible
+  visibility: visible;
 }
 
 .zan-popup__mask {
@@ -409,8 +403,8 @@ border-radius: 500px;
   right: 0;
   bottom: 0;
   z-index: 10;
-  background: rgba(0, 0, 0, .7);
-  display: none
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
 }
 
 .zan-popup__container {
@@ -420,22 +414,18 @@ border-radius: 500px;
   background: #fff;
   transform: translate3d(-50%, -50%, 0);
   transform-origin: center;
-  transition: all .4s ease;
+  transition: all 0.4s ease;
   z-index: 11;
-  opacity: 0
+  opacity: 0;
 }
 
 .zan-popup--show .zan-popup__container {
-  opacity: 1
+  opacity: 1;
 }
 
 .zan-popup--show .zan-popup__mask {
-  display: block
+  display: block;
 }
-
-
-
-
 
 /* 清除浮动通用代码 */
 
@@ -460,4 +450,3 @@ border-radius: 500px;
   margin-top: 20rpx;
   margin-bottom: 120rpx;
 }
-

@@ -8,49 +8,47 @@
  *  *Copyright (c) 2017 https://www.minapper.com All rights reserved.
  */
 
-
 import config from '../../utils/config.js'
-import Api from '../../utils/api.js';
-import util from '../../utils/util.js';
-import Auth from '../../utils/auth.js';
-import wxApi from '../../utils/wxApi.js';
-import wxRequest from '../../utils/wxRequest.js';
-import Adapter from '../../utils/adapter.js';
+import Api from '../../utils/api.js'
+import util from '../../utils/util.js'
+import Auth from '../../utils/auth.js'
+import wxApi from '../../utils/wxApi.js'
+import wxRequest from '../../utils/wxRequest.js'
+import Adapter from '../../utils/adapter.js'
 
-const innerAudioContext = wx.createInnerAudioContext();
-let ctx = wx.createCanvasContext('mycanvas');
+const innerAudioContext = wx.createInnerAudioContext()
+let ctx = wx.createCanvasContext('mycanvas')
 
-var app = getApp();
+var app = getApp()
 let isFocusing = false
-const pageCount = config.getPageCount;
+const pageCount = config.getPageCount
 
-var webSiteName= config.getWebsiteName;
-var domain =config.getDomain
+var webSiteName = config.getWebsiteName
+var domain = config.getDomain
 var wechat = config.getWecat
 import { ModalView } from '../../templates/modal-view/modal-view.js'
-import Poster from '../../templates/components/wxa-plugin-canvas-poster/poster/poster';
+import Poster from '../../templates/components/wxa-plugin-canvas-poster/poster/poster'
 let rewardedVideoAd = null
-
 
 Page({
   data: {
-    target :'',
-    wechat:wechat, 
+    target: '',
+    wechat: wechat,
     title: '文章内容',
-    webSiteName:webSiteName,
+    webSiteName: webSiteName,
     detail: {},
     commentsList: [],
     ChildrenCommentsList: [],
     commentCount: '',
     detailDate: '',
-    commentValue: '',  
+    commentValue: '',
     display: 'none',
     showerror: 'none',
     page: 1,
     isLastPage: false,
-    parentID: "0",
+    parentID: '0',
     focus: false,
-    placeholder: "请写下您想说的话...",
+    placeholder: '请写下您想说的话...',
     postID: null,
     scrollHeight: 0,
     postList: [],
@@ -61,27 +59,27 @@ Page({
       hidden: true
     },
     content: '',
-    isShow: true,//控制menubox是否显示
-    isLoad: true,//解决menubox执行一次  
+    isShow: true, //控制menubox是否显示
+    isLoad: true, //解决menubox执行一次
     menuBackgroup: false,
-    likeImag: "like.png",
+    likeImag: 'like.png',
     likeList: [],
     likeCount: 0,
-    displayLike: 'none', 
-    userid: "",
-    toFromId: "",
-    commentdate: "",
+    displayLike: 'none',
+    userid: '',
+    toFromId: '',
+    commentdate: '',
     flag: 1,
     logo: wx.getStorageSync('logoImageurl'),
     enableComment: true,
     isLoading: false,
     total_comments: 0,
     isLoginPopup: false,
-    openid: "",
+    openid: '',
     userInfo: {},
     system: '',
     downloadFileDomain: wx.getStorageSync('downloadfileDomain'),
-    businessDomain:wx.getStorageSync('businessDomain'),
+    businessDomain: wx.getStorageSync('businessDomain'),
 
     isPlayAudio: false,
     audioSeek: 0,
@@ -93,14 +91,13 @@ Page({
     shareImagePath: '',
     detailSummaryHeight: '',
     detailAdsuccess: true,
-    detailTopAdsuccess:true,
+    detailTopAdsuccess: true,
     fristOpen: false,
-    domain:domain,
+    domain: domain,
     detailSummaryHeight: '',
     platform: '',
     isShareTimeline: false,
-    inFinChat:false,
-
+    inFinChat: false
   },
   onLoad: function (options) {
     let LaunchOptions = wx.getLaunchOptionsSync()
@@ -110,107 +107,102 @@ Page({
       isShareTimeline
     })
 
-    var self = this;
+    var self = this
     wx.getSystemInfo({
-      success (res) {
-        var system = res.system.indexOf('iOS') != -1 ? 'iOS' : 'Android';
-        self.setData({ system: system ,platform: res.platform});
-        if(res.inFinChat)
-        {          
-          self.setData({inFinChat:res.inFinChat})          
-        }
-        else{
-          Auth.checkLogin(self)         
+      success(res) {
+        var system = res.system.indexOf('iOS') != -1 ? 'iOS' : 'Android'
+        self.setData({ system: system, platform: res.platform })
+        if (res.inFinChat) {
+          self.setData({ inFinChat: res.inFinChat })
+        } else {
+          Auth.checkLogin(self)
         }
       }
-    })   
-    wxApi.showShareMenu({
-      withShareTicket:true,
-      menus:['shareAppMessage','shareTimeline'],     
     })
-    self.getEnableComment();
-    self.fetchDetailData(options.id);
-    Auth.setUserInfoData(self);    
-    Adapter.setInterstitialAd("enable_detail_interstitial_ad");    
-    new ModalView;
+    wxApi.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
+    self.getEnableComment()
+    self.fetchDetailData(options.id)
+    Auth.setUserInfoData(self)
+    Adapter.setInterstitialAd('enable_detail_interstitial_ad')
+    new ModalView()
   },
   onUnload: function () {
     //卸载页面，清除计步器
-    clearInterval(this.data.durationIntval);
-    if (rewardedVideoAd && rewardedVideoAd.destroy) { 
-      rewardedVideoAd.destroy() 
+    clearInterval(this.data.durationIntval)
+    if (rewardedVideoAd && rewardedVideoAd.destroy) {
+      rewardedVideoAd.destroy()
     }
     innerAudioContext.destroy()
-    ctx=null;
-
-
+    ctx = null
   },
   showLikeImg: function () {
-    var self = this;
-    var flag = false;
-    var _likes = self.data.detail.avatarurls;
+    var self = this
+    var flag = false
+    var _likes = self.data.detail.avatarurls
     if (!_likes) {
-      return;
+      return
     }
-    var likes = [];
+    var likes = []
     for (var i = 0; i < _likes.length; i++) {
-      var avatarurl = _likes[i].avatarurl;
-      likes[i] = avatarurl;
+      var avatarurl = _likes[i].avatarurl
+      likes[i] = avatarurl
     }
-    var temp = likes;
+    var temp = likes
     self.setData({
       likeList: likes
-    });
+    })
   },
   onReachBottom: function () {
-    var self = this;
+    var self = this
     if (!self.data.isLastPage) {
-      console.log('当前页' + self.data.page);
-      self.fetchCommentData();
+      console.log('当前页' + self.data.page)
+      self.fetchCommentData()
       self.setData({
-        page: self.data.page + 1,
-      });
-    }
-    else {
-      console.log('评论已经是最后一页了');
+        page: self.data.page + 1
+      })
+    } else {
+      console.log('评论已经是最后一页了')
     }
   },
 
-   // 首次加载评论
-   fristOpenComment() {    
-    this.setData({   
-      page :1,
+  // 首次加载评论
+  fristOpenComment() {
+    this.setData({
+      page: 1,
       commentsList: [],
       isLastPage: false
     })
-    this.fetchCommentData();
+    this.fetchCommentData()
     this.setData({
-      page: this.data.page + 1,
-    });
+      page: this.data.page + 1
+    })
   },
 
   onShareAppMessage: function (res) {
     //this.ShowHideMenu();
-    console.log(res);
+    console.log(res)
     return {
       title: '分享"' + webSiteName + '"的文章：' + this.data.detail.title.rendered,
       path: 'pages/detail/detail?id=' + this.data.detail.id,
       imageUrl: this.data.detail.post_full_image,
-      appInfo:{
-        'appId':config.appghId
+      appInfo: {
+        appId: config.appghId
       },
       success: function (res) {
         // 转发成功
-        console.log(res);
+        console.log(res)
       },
       fail: function (res) {
-        console.log(res);
+        console.log(res)
         // 转发失败
       }
     }
   },
-    // 自定义分享朋友圈
-  onShareTimeline: function() {
+  // 自定义分享朋友圈
+  onShareTimeline: function () {
     let imageUrl = this.data.detail.post_full_image
     return {
       title: this.data.detail.title.rendered,
@@ -221,20 +213,18 @@ Page({
     }
   },
   gotowebpage: function () {
-    var self = this;
-    self.ShowHideMenu();
-    var enterpriseMinapp = self.data.detail.enterpriseMinapp;
-    var url = '';
-    if (enterpriseMinapp == "1") {
-      var url = '../webpage/webpage';
+    var self = this
+    self.ShowHideMenu()
+    var enterpriseMinapp = self.data.detail.enterpriseMinapp
+    var url = ''
+    if (enterpriseMinapp == '1') {
+      var url = '../webpage/webpage'
       wx.navigateTo({
         url: url + '?url=' + self.data.link
       })
+    } else {
+      self.copyLink(self.data.link)
     }
-    else {
-      self.copyLink(self.data.link);
-    }
-
   },
   copyLink: function (url) {
     wx.setClipboardData({
@@ -253,88 +243,78 @@ Page({
   },
   clickLike: function (e) {
     if (this.data.isShareTimeline) {
-      Adapter.toast("请前往小程序使用完整服务", 3000)
+      Adapter.toast('请前往小程序使用完整服务', 3000)
       return
     }
-    var id = e.target.id;
-    var self = this;
+    var id = e.target.id
+    var self = this
     if (id == 'likebottom') {
-      this.ShowHideMenu();
+      this.ShowHideMenu()
     }
 
     if (self.data.openid) {
       var data = {
         openid: self.data.openid,
         postid: self.data.postID
-      };
-      var url = Api.postLikeUrl();
-      var postLikeRequest = wxRequest.postRequest(url, data);
-      postLikeRequest
-        .then(response => {
-          if (response.data.status == '200') {
-            var _likeList = []
-            var _like = self.data.userInfo.avatarUrl;
-            _likeList.push(_like);
-            var tempLikeList = _likeList.concat(self.data.likeList);
-            var _likeCount = parseInt(self.data.likeCount) + 1;
-            self.setData({
-              likeList: tempLikeList,
-              likeCount: _likeCount,
-              displayLike: 'block'
-            });
-            wx.showToast({
-              title: '谢谢点赞',
-              icon: 'success',
-              duration: 900,
-              success: function () {
-              }
-            })
-          }
-          else if (response.data.status == '501') {
-            console.log(response.data.message);
-            wx.showToast({
-              title: '谢谢，已赞过',
-              icon: 'success',
-              duration: 900,
-              success: function () {
-              }
-            })
-          }
-          else {
-            console.log(response.data.message);
-
-          }
+      }
+      var url = Api.postLikeUrl()
+      var postLikeRequest = wxRequest.postRequest(url, data)
+      postLikeRequest.then((response) => {
+        if (response.data.status == '200') {
+          var _likeList = []
+          var _like = self.data.userInfo.avatarUrl
+          _likeList.push(_like)
+          var tempLikeList = _likeList.concat(self.data.likeList)
+          var _likeCount = parseInt(self.data.likeCount) + 1
           self.setData({
-            likeImag: "like-on.png"
-          });
+            likeList: tempLikeList,
+            likeCount: _likeCount,
+            displayLike: 'block'
+          })
+          wx.showToast({
+            title: '谢谢点赞',
+            icon: 'success',
+            duration: 900,
+            success: function () {}
+          })
+        } else if (response.data.status == '501') {
+          console.log(response.data.message)
+          wx.showToast({
+            title: '谢谢，已赞过',
+            icon: 'success',
+            duration: 900,
+            success: function () {}
+          })
+        } else {
+          console.log(response.data.message)
+        }
+        self.setData({
+          likeImag: 'like-on.png'
         })
-    }
-    else {
+      })
+    } else {
       Auth.loginType(this)
-
     }
   },
-  getIslike: function () { //判断当前用户是否点赞
-    var self = this;
+  getIslike: function () {
+    //判断当前用户是否点赞
+    var self = this
     if (self.data.openid) {
       var data = {
         openid: self.data.openid,
         postid: self.data.postID
-      };
-      var url = Api.postIsLikeUrl();
-      var postIsLikeRequest = wxRequest.postRequest(url, data);
-      postIsLikeRequest
-        .then(response => {
-          if (response.data.status == '200') {
-            self.setData({
-              likeImag: "like-on.png"
-            });
+      }
+      var url = Api.postIsLikeUrl()
+      var postIsLikeRequest = wxRequest.postRequest(url, data)
+      postIsLikeRequest.then((response) => {
+        if (response.data.status == '200') {
+          self.setData({
+            likeImag: 'like-on.png'
+          })
 
-            console.log("已赞过");
-          }
-
-        })
-
+          console.log('已赞过')
+        }
+      })
     }
   },
   goHome: function () {
@@ -344,111 +324,101 @@ Page({
   },
   praise: function () {
     if (this.data.isShareTimeline) {
-      Adapter.toast("请前往小程序使用完整服务", 3000)
+      Adapter.toast('请前往小程序使用完整服务', 3000)
       return
     }
-    //this.ShowHideMenu(); 
-      var src = wx.getStorageSync('zanImageurl');
-      wx.previewImage({
-        urls: [src],
-      });
-
-   
+    //this.ShowHideMenu();
+    var src = wx.getStorageSync('zanImageurl')
+    wx.previewImage({
+      urls: [src]
+    })
   },
 
   //获取是否开启评论设置
   getEnableComment: function (id) {
-    var self = this;
-    var getEnableCommentRequest = wxRequest.getRequest(Api.getEnableComment());
-    getEnableCommentRequest
-      .then(response => {
-        if (response.data.enableComment != null && response.data.enableComment != '') {
-          if (response.data.enableComment === "1") {
-            self.setData({
-              enableComment: true
-            });
-          }
-          else {
-            self.setData({
-              enableComment: false
-            });
-          }
-
-        };
-
-      });
+    var self = this
+    var getEnableCommentRequest = wxRequest.getRequest(Api.getEnableComment())
+    getEnableCommentRequest.then((response) => {
+      if (response.data.enableComment != null && response.data.enableComment != '') {
+        if (response.data.enableComment === '1') {
+          self.setData({
+            enableComment: true
+          })
+        } else {
+          self.setData({
+            enableComment: false
+          })
+        }
+      }
+    })
   },
   //获取文章内容
   fetchDetailData: function (id) {
-    var self = this;
-    var getPostDetailRequest = wxRequest.getRequest(Api.getPostByID(id));
-    var res;
-    var _displayLike = 'none';
+    var self = this
+    var getPostDetailRequest = wxRequest.getRequest(Api.getPostByID(id))
+    var res
+    var _displayLike = 'none'
     getPostDetailRequest
-      .then(response => {
-        res = response;
-        if (response.data.code && (response.data.data.status == "404")) {
+      .then((response) => {
+        res = response
+        if (response.data.code && response.data.data.status == '404') {
           self.setData({
             showerror: 'block',
             display: 'none',
-            detailAdsuccess:true,
-            detailTopAdsuccess:true,
+            detailAdsuccess: true,
+            detailTopAdsuccess: true,
             errMessage: response.data.message
-          });
-          return false;
+          })
+          return false
         }
         // 设置页面标题：文章分类
-        if(res.data.category_name)
-        {
+        if (res.data.category_name) {
           wx.setNavigationBarTitle({
             // title: res.data.title.rendered
             title: res.data.category_name
-          });
+          })
         }
-        
-       
+
         if (response.data.total_comments != null && response.data.total_comments != '') {
           self.setData({
-            commentCount: "有" + response.data.total_comments + "条评论"
-          });
-        };
-        var _likeCount = response.data.like_count;
-        if (response.data.like_count != '0') {
-          _displayLike = "block"
+            commentCount: '有' + response.data.total_comments + '条评论'
+          })
         }
-        
+        var _likeCount = response.data.like_count
+        if (response.data.like_count != '0') {
+          _displayLike = 'block'
+        }
+
         // 调用API从本地缓存中获取阅读记录并记录
-        var logs = wx.getStorageSync('readLogs') || [];
+        var logs = wx.getStorageSync('readLogs') || []
         // 过滤重复值
         if (logs.length > 0) {
           logs = logs.filter(function (log) {
-            return log[0] !== id;
-          });
+            return log[0] !== id
+          })
         }
         // 如果超过指定数量
         if (logs.length > 19) {
-          logs.pop();//去除最后一个
+          logs.pop() //去除最后一个
         }
-        logs.unshift([id, response.data.title.rendered]);
-        wx.setStorageSync('readLogs', logs);
+        logs.unshift([id, response.data.title.rendered])
+        wx.setStorageSync('readLogs', logs)
 
-        var openAdLogs = wx.getStorageSync('openAdLogs') || [];
-        var openAded = res.data.excitationAd == '1' ? false : true;
+        var openAdLogs = wx.getStorageSync('openAdLogs') || []
+        var openAded = res.data.excitationAd == '1' ? false : true
         if (openAdLogs.length > 19) {
-          openAded = true;
+          openAded = true
         } else if (openAdLogs.length > 0 && res.data.excitationAd == '1') {
           for (var i = 0; i < openAdLogs.length; i++) {
             if (openAdLogs[i].id == res.data.id) {
-              openAded = true;
-              break;
+              openAded = true
+              break
             }
-
-
           }
         }
 
         if (res.data.excitationAd == '1' && !self.data.isShareTimeline) {
-          self.loadInterstitialAd(res.data.rewardedVideoAdId);
+          self.loadInterstitialAd(res.data.rewardedVideoAdId)
         }
 
         self.setData({
@@ -462,197 +432,194 @@ Page({
           total_comments: response.data.total_comments,
           postImageUrl: response.data.postImageUrl,
           detailSummaryHeight: openAded ? '' : '400rpx'
-
-        });
+        })
 
         return response.data
       })
-      .then(response => {
-
-        if(response.audios.length>0  && response.audios[0].src !='' )
-        {
-          self.InitializationAudio( response.audios[0].src);
-          self.loadAudio();
+      .then((response) => {
+        if (response.audios.length > 0 && response.audios[0].src != '') {
+          self.InitializationAudio(response.audios[0].src)
+          self.loadAudio()
           self.setData({
-            displayAudio: "block"
-          });
+            displayAudio: 'block'
+          })
         }
-
-
       })
-      .then(response => {
-        var tagsArr = [];
+      .then((response) => {
+        var tagsArr = []
         tagsArr = res.data.tags
         if (!tagsArr) {
-          return false;
+          return false
         }
-        var tags = "";
+        var tags = ''
         for (var i = 0; i < tagsArr.length; i++) {
           if (i == 0) {
-            tags += tagsArr[i];
-          }
-          else {
-            tags += "," + tagsArr[i];
+            tags += tagsArr[i]
+          } else {
+            tags += ',' + tagsArr[i]
           }
         }
-        if (tags != "") {
-          var getPostTagsRequest = wxRequest.getRequest(Api.getPostsByTags(id, tags));
-          getPostTagsRequest
-            .then(response => {
-              self.setData({
-                postList: response.data
-              });
+        if (tags != '') {
+          var getPostTagsRequest = wxRequest.getRequest(Api.getPostsByTags(id, tags))
+          getPostTagsRequest.then((response) => {
+            self.setData({
+              postList: response.data
             })
+          })
         }
-      }).then(response => {//获取点赞记录
-        self.showLikeImg();
-      }).then(resonse => {
+      })
+      .then((response) => {
+        //获取点赞记录
+        self.showLikeImg()
+      })
+      .then((resonse) => {
         if (self.data.openid) {
-          Auth.checkSession(self, 'isLoginLater');
+          Auth.checkSession(self, 'isLoginLater')
         }
-      }).then(response => {//获取是否已经点赞
+      })
+      .then((response) => {
+        //获取是否已经点赞
         if (self.data.openid) {
-          self.getIslike();
+          self.getIslike()
         }
-      }).then(res=>{
-          self.fristOpenComment();
+      })
+      .then((res) => {
+        self.fristOpenComment()
       })
       .catch(function (error) {
-        console.log('error: ' + error);
+        console.log('error: ' + error)
       })
   },
   //拖动进度条事件
-  sliderChange:function(e) {
-    var that = this;
-    innerAudioContext.src = this.data.detail.audios[0].src;
+  sliderChange: function (e) {
+    var that = this
+    innerAudioContext.src = this.data.detail.audios[0].src
     //获取进度条百分比
-    var value = e.detail.value;
-    this.setData({ audioTime: value });
-    var duration = this.data.audioDuration;
+    var value = e.detail.value
+    this.setData({ audioTime: value })
+    var duration = this.data.audioDuration
     //根据进度条百分比及歌曲总时间，计算拖动位置的时间
-    value = parseInt(value * duration / 100);
+    value = parseInt((value * duration) / 100)
     //更改状态
-    this.setData({ audioSeek: value, isPlayAudio: true });
+    this.setData({ audioSeek: value, isPlayAudio: true })
     //调用seek方法跳转歌曲时间
-    innerAudioContext.seek(value);
+    innerAudioContext.seek(value)
     //播放歌曲
-    innerAudioContext.play();
+    innerAudioContext.play()
   },
 
-  
   //初始化播放器，获取duration
- InitializationAudio:function (audiosrc) {
-  var self = this;
-  //设置src
-  innerAudioContext.src = audiosrc;
-  //运行一次
-  //innerAudioContext.play();
-  innerAudioContext.autoplay = false;
-  innerAudioContext.pause();
-  innerAudioContext.onCanplay(() => {
-    //初始化duration
-    innerAudioContext.duration
-    setTimeout(function() {
-      //延时获取音频真正的duration
-      var duration = innerAudioContext.duration;
-      var min = parseInt(duration / 60);
-      var sec = parseInt(duration % 60);
-      if (min.toString().length == 1) {
-        min = `0${min}`;
-      }
-      if (sec.toString().length == 1) {
-        sec = `0${sec}`;
-      }
-      self.setData({
-        audioDuration: innerAudioContext.duration,
-        showTime2: `${min}:${sec}`
-      });
-    }, 1000)
-  })
+  InitializationAudio: function (audiosrc) {
+    var self = this
+    //设置src
+    innerAudioContext.src = audiosrc
+    //运行一次
+    //innerAudioContext.play();
+    innerAudioContext.autoplay = false
+    innerAudioContext.pause()
+    innerAudioContext.onCanplay(() => {
+      //初始化duration
+      innerAudioContext.duration
+      setTimeout(function () {
+        //延时获取音频真正的duration
+        var duration = innerAudioContext.duration
+        var min = parseInt(duration / 60)
+        var sec = parseInt(duration % 60)
+        if (min.toString().length == 1) {
+          min = `0${min}`
+        }
+        if (sec.toString().length == 1) {
+          sec = `0${sec}`
+        }
+        self.setData({
+          audioDuration: innerAudioContext.duration,
+          showTime2: `${min}:${sec}`
+        })
+      }, 1000)
+    })
+  },
 
-},
-
- loadAudio :function() {
-  var that = this;
-  //设置一个计步器
-  that.data.durationIntval = setInterval(function() {
-    //当歌曲在播放时执行
-    if (that.data.isPlayAudio == true) {
-      //获取歌曲的播放时间，进度百分比
-      var seek = that.data.audioSeek;
-      var duration = innerAudioContext.duration;
-      var time = that.data.audioTime;
-      time = parseInt(100 * seek / duration);
-      //当歌曲在播放时，每隔一秒歌曲播放时间+1，并计算分钟数与秒数
-      var min = parseInt((seek + 1) / 60);
-      var sec = parseInt((seek + 1) % 60);
-      //填充字符串，使3:1这种呈现出 03：01 的样式
-      if (min.toString().length == 1) {
-        min = `0${min}`;
-      }
-      if (sec.toString().length == 1) {
-        sec = `0${sec}`;
-      }
-      var min1 = parseInt(duration / 60);
-      var sec1 = parseInt(duration % 60);
-      if (min1.toString().length == 1) {
-        min1 = `0${min1}`;
-      }
-      if (sec1.toString().length == 1) {
-        sec1 = `0${sec1}`;
-      }
-      //当进度条完成，停止播放，并重设播放时间和进度条
-      if (time >= 100) {
-        innerAudioContext.stop();
+  loadAudio: function () {
+    var that = this
+    //设置一个计步器
+    that.data.durationIntval = setInterval(function () {
+      //当歌曲在播放时执行
+      if (that.data.isPlayAudio == true) {
+        //获取歌曲的播放时间，进度百分比
+        var seek = that.data.audioSeek
+        var duration = innerAudioContext.duration
+        var time = that.data.audioTime
+        time = parseInt((100 * seek) / duration)
+        //当歌曲在播放时，每隔一秒歌曲播放时间+1，并计算分钟数与秒数
+        var min = parseInt((seek + 1) / 60)
+        var sec = parseInt((seek + 1) % 60)
+        //填充字符串，使3:1这种呈现出 03：01 的样式
+        if (min.toString().length == 1) {
+          min = `0${min}`
+        }
+        if (sec.toString().length == 1) {
+          sec = `0${sec}`
+        }
+        var min1 = parseInt(duration / 60)
+        var sec1 = parseInt(duration % 60)
+        if (min1.toString().length == 1) {
+          min1 = `0${min1}`
+        }
+        if (sec1.toString().length == 1) {
+          sec1 = `0${sec1}`
+        }
+        //当进度条完成，停止播放，并重设播放时间和进度条
+        if (time >= 100) {
+          innerAudioContext.stop()
+          that.setData({
+            audioSeek: 0,
+            audioTime: 0,
+            audioDuration: duration,
+            isPlayAudio: false,
+            showTime1: `00:00`
+          })
+          return false
+        }
+        //正常播放，更改进度信息，更改播放时间信息
         that.setData({
-          audioSeek: 0,
-          audioTime: 0,
+          audioSeek: seek + 1,
+          audioTime: time,
           audioDuration: duration,
-          isPlayAudio: false,
-          showTime1: `00:00`
-        });
-        return false;
+          showTime1: `${min}:${sec}`,
+          showTime2: `${min1}:${sec1}`
+        })
       }
-      //正常播放，更改进度信息，更改播放时间信息
-      that.setData({
-        audioSeek: seek + 1,
-        audioTime: time,
-        audioDuration: duration,
-        showTime1: `${min}:${sec}`,
-        showTime2: `${min1}:${sec1}`
-      });
-    }
-  }, 1000);
-},
+    }, 1000)
+  },
 
- playAudio :function() {
-  //获取播放状态和当前播放时间  
-  var  self=this;
-  var isPlayAudio = self.data.isPlayAudio;
-  var seek = self.data.audioSeek;
-  innerAudioContext.pause();
-  //更改播放状态
-  self.setData({
-    isPlayAudio: !isPlayAudio
-  })
-  if (isPlayAudio) {
-    //如果在播放则记录播放的时间seek，暂停
+  playAudio: function () {
+    //获取播放状态和当前播放时间
+    var self = this
+    var isPlayAudio = self.data.isPlayAudio
+    var seek = self.data.audioSeek
+    innerAudioContext.pause()
+    //更改播放状态
     self.setData({
-      audioSeek: innerAudioContext.currentTime
-    });
-  } else {
-    //如果在暂停，获取播放时间并继续播放
-    innerAudioContext.src = self.data.detail.audios[0].src;
-    if (innerAudioContext.duration != 0) {
+      isPlayAudio: !isPlayAudio
+    })
+    if (isPlayAudio) {
+      //如果在播放则记录播放的时间seek，暂停
       self.setData({
-        audioDuration: innerAudioContext.duration
-      });
+        audioSeek: innerAudioContext.currentTime
+      })
+    } else {
+      //如果在暂停，获取播放时间并继续播放
+      innerAudioContext.src = self.data.detail.audios[0].src
+      if (innerAudioContext.duration != 0) {
+        self.setData({
+          audioDuration: innerAudioContext.duration
+        })
+      }
+      //跳转到指定时间播放
+      innerAudioContext.seek(seek)
+      innerAudioContext.play()
     }
-    //跳转到指定时间播放
-    innerAudioContext.seek(seek);
-    innerAudioContext.play();
-  }
-},
+  },
   //给a标签添加跳转和复制链接事件
   wxParseTagATap: function (e) {
     let self = this
@@ -661,8 +628,7 @@ Page({
     let appid = e.detail.appid
     let redirectype = e.detail.redirectype
     let path = e.detail.path
-    let jumptype=e.detail.jumptype
-
+    let jumptype = e.detail.jumptype
 
     // 判断a标签src里是不是插入的文档链接
     let isDoc = /\.(doc|docx|xls|xlsx|ppt|pptx|pdf)$/.test(href)
@@ -672,170 +638,142 @@ Page({
       return
     }
 
-    if(redirectype) {
-      if (redirectype == 'apppage') { //跳转到小程序内部页面         
+    if (redirectype) {
+      if (redirectype == 'apppage') {
+        //跳转到小程序内部页面
         wx.navigateTo({
           url: path
         })
-      } else if (redirectype == 'webpage') //跳转到web-view内嵌的页面
-      {
-        href = '../webpage/webpage?url=' + encodeURIComponent(href);
+      } else if (redirectype == 'webpage') {
+        //跳转到web-view内嵌的页面
+        href = '../webpage/webpage?url=' + encodeURIComponent(href)
         wx.navigateTo({
           url: href
         })
-      }
-      else if (redirectype == 'miniapp') //跳转其他小程序
-       {
-        if(jumptype=='redirect')
-        {
+      } else if (redirectype == 'miniapp') {
+        //跳转其他小程序
+        if (jumptype == 'redirect') {
           wx.navigateToMiniProgram({
             appId: appid,
             path: path
           })
-        }
-        else if(jumptype=='embedded')
-        {
+        } else if (jumptype == 'embedded') {
           wx.openEmbeddedMiniProgram({
             appId: appid,
             path: path
           })
-
         }
       }
-      return;
+      return
     }
 
+    var enterpriseMinapp = self.data.detail.enterpriseMinapp
 
-    var enterpriseMinapp = self.data.detail.enterpriseMinapp;
-    
     //可以在这里进行一些路由处理
     if (href.indexOf(domain) == -1) {
-
-      var n=0;
+      var n = 0
       for (var i = 0; i < self.data.businessDomain.length; i++) {
-  
         if (href.indexOf(self.data.businessDomain[i].domain) != -1) {
-          n++;
-          break;
+          n++
+          break
         }
       }
 
-      if(n>0)
-      {
+      if (n > 0) {
         var url = '../webpage/webpage'
-        if (enterpriseMinapp == "1") {
-          url = '../webpage/webpage';
+        if (enterpriseMinapp == '1') {
+          url = '../webpage/webpage'
           wx.navigateTo({
             url: url + '?url=' + href
           })
+        } else {
+          self.copyLink(href)
         }
-        else {
-          self.copyLink(href);
+      } else {
+        self.copyLink(href)
+      }
+    } else {
+      var slug = util.GetUrlFileName(href, domain)
+      if (slug == '') {
+        var url = '../webpage/webpage'
+        if (enterpriseMinapp == '1') {
+          url = '../webpage/webpage'
+          wx.navigateTo({
+            url: url + '?url=' + href
+          })
+        } else {
+          self.copyLink(href)
         }
-      }
-      else
-      {
-        self.copyLink(href);
-
-      }
-
-    }
-    else {
-      var slug = util.GetUrlFileName(href, domain);
-      if(slug=="")
-      {
-          var url = '../webpage/webpage'
-          if (enterpriseMinapp == "1") {
-            url = '../webpage/webpage';
-            wx.navigateTo({
-              url: url + '?url=' + href
-            })
-          }
-          else {
-            self.copyLink(href);
-          }
-        return;
-
+        return
       }
       if (slug == 'index') {
         wx.switchTab({
           url: '../index/index'
         })
-      }
-      else {
-        var getPostSlugRequest = wxRequest.getRequest(Api.getPostBySlug(slug));
+      } else {
+        var getPostSlugRequest = wxRequest.getRequest(Api.getPostBySlug(slug))
         getPostSlugRequest
-          .then(res => {
+          .then((res) => {
             if (res.statusCode == 200) {
               if (res.data.length != 0) {
-                var postID = res.data[0].id;
-                var openLinkCount = wx.getStorageSync('openLinkCount') || 0;
+                var postID = res.data[0].id
+                var openLinkCount = wx.getStorageSync('openLinkCount') || 0
                 if (openLinkCount > 4) {
                   wx.redirectTo({
                     url: '../detail/detail?id=' + postID
                   })
-                }
-                else {
+                } else {
                   wx.navigateTo({
                     url: '../detail/detail?id=' + postID
                   })
-                  openLinkCount++;
-                  wx.setStorageSync('openLinkCount', openLinkCount);
+                  openLinkCount++
+                  wx.setStorageSync('openLinkCount', openLinkCount)
                 }
-              }
-              else {
-                
+              } else {
                 var url = '../webpage/webpage'
-                if (enterpriseMinapp == "1") {
-                  url = '../webpage/webpage';
+                if (enterpriseMinapp == '1') {
+                  url = '../webpage/webpage'
                   wx.navigateTo({
                     url: url + '?url=' + href
                   })
+                } else {
+                  self.copyLink(href)
                 }
-                else {
-                  self.copyLink(href);
-                }
-
-
               }
-
             }
-
-          }).catch(res => {
-            console.log(response.data.message);
+          })
+          .catch((res) => {
+            console.log(response.data.message)
           })
       }
     }
-
   },
 
-   // 打开文档
-   openLinkDoc(e) {
+  // 打开文档
+  openLinkDoc(e) {
     let self = this
     let url
     let fileType
-    
+
     // 如果是a标签href中插入的文档
     let src = e.currentTarget.dataset.src
-    var n=0;
+    var n = 0
     for (var i = 0; i < self.data.downloadFileDomain.length; i++) {
-
       if (src.indexOf(self.data.downloadFileDomain[i]) != -1) {
-        n++;
-        break;
+        n++
+        break
       }
     }
 
-    if(n==0)
-    {
-      self.copyLink(src);
-      return;
+    if (n == 0) {
+      self.copyLink(src)
+      return
     }
 
     let docType
     let isDoc = /\.(doc|docx|xls|xlsx|ppt|pptx|pdf)$/.test(src)
 
-    if (src && isDoc){
+    if (src && isDoc) {
       url = src
       fileType = /doc|docx|xls|xlsx|ppt|pptx|pdf$/.exec(src)[0]
     } else {
@@ -857,66 +795,66 @@ Page({
       }
     })
   },
-  success(res){
-    const { detail} = res
-    console.log(detail);
-},
-  showCustomizeModal(e){
+  success(res) {
+    const { detail } = res
+    console.log(detail)
+  },
+  showCustomizeModal(e) {
     if (this.data.isShareTimeline) {
-      Adapter.toast("请前往小程序使用完整服务", 3000)
+      Adapter.toast('请前往小程序使用完整服务', 3000)
       return
     }
 
     let key = e.currentTarget.dataset.key
     let focus = key === 'drawer'
     this.setData({
-        target : key,
-        focus,
-        menuBackgroup: !!key
+      target: key,
+      focus,
+      menuBackgroup: !!key
     })
-},
+  },
 
-//点击非评论区隐藏弹出栏
-hiddenBar() {
-  this.setData({
-    target: '',
-    focus: false,
-    menuBackgroup: false
-  })
-},
+  //点击非评论区隐藏弹出栏
+  hiddenBar() {
+    this.setData({
+      target: '',
+      focus: false,
+      menuBackgroup: false
+    })
+  },
 
   //获取评论
   fetchCommentData: function () {
-    var self = this;
-    let args = {};
-    args.postId = self.data.postID;
-    args.limit = pageCount;
-    args.page = self.data.page;
+    var self = this
+    let args = {}
+    args.postId = self.data.postID
+    args.limit = pageCount
+    args.page = self.data.page
     self.setData({ isLoading: true })
-    var getCommentsRequest = wxRequest.getRequest(Api.getCommentsReplay(args));
+    var getCommentsRequest = wxRequest.getRequest(Api.getCommentsReplay(args))
     getCommentsRequest
-      .then(response => {
+      .then((response) => {
         if (response.statusCode == 200) {
           if (response.data.data.length < pageCount) {
             self.setData({
               isLastPage: true
-            });
+            })
           }
           if (response.data) {
             self.setData({
               commentsList: [].concat(self.data.commentsList, response.data.data)
-            });
+            })
           }
         }
       })
-      .catch(response => {
-        console.log(response.data.message);
-
-      }).finally(function () {
+      .catch((response) => {
+        console.log(response.data.message)
+      })
+      .finally(function () {
         self.setData({
           isLoading: false
-        });
-      });
+        })
+      })
   },
   //显示或隐藏功能菜单
   ShowHideMenu: function () {
@@ -935,87 +873,83 @@ hiddenBar() {
   },
   //底部刷新
   loadMore: function (e) {
-    var self = this;
+    var self = this
     if (!self.data.isLastPage) {
       self.setData({
         page: self.data.page + 1
-      });
-      console.log('当前页' + self.data.page);
-      this.fetchCommentData();
-    }
-    else {
+      })
+      console.log('当前页' + self.data.page)
+      this.fetchCommentData()
+    } else {
       wx.showToast({
         title: '没有更多内容',
         mask: false,
         duration: 1000
-      });
+      })
     }
   },
   replay: function (e) {
-    var self = this;
-    var id = e.currentTarget.dataset.id;
-    var name = e.currentTarget.dataset.name;
-    var userid = e.currentTarget.dataset.userid;
-    var target = e.currentTarget.dataset.key;
-    isFocusing = true;
-    if (self.data.enableComment == "1") {
+    var self = this
+    var id = e.currentTarget.dataset.id
+    var name = e.currentTarget.dataset.name
+    var userid = e.currentTarget.dataset.userid
+    var target = e.currentTarget.dataset.key
+    isFocusing = true
+    if (self.data.enableComment == '1') {
       self.setData({
         parentID: id,
-        placeholder: "回复" + name + ":",
+        placeholder: '回复' + name + ':',
         focus: true,
-        userid: userid  ,
-        target : target,
-        menuBackgroup: true,
-      });
+        userid: userid,
+        target: target,
+        menuBackgroup: true
+      })
     }
   },
   onReplyBlur: function (e) {
-    var self = this;
+    var self = this
     // console.log('onReplyBlur', isFocusing);
     if (!isFocusing) {
       {
-        const text = e.detail.value.trim();
+        const text = e.detail.value.trim()
         if (text === '') {
           self.setData({
-            parentID: "0",
-            placeholder: "请写下您想说的话...",
-            userid: ""         
-          });
+            parentID: '0',
+            placeholder: '请写下您想说的话...',
+            userid: ''
+          })
         }
-
       }
     }
     // console.log(isFocusing);
   },
   onRepleyFocus: function (e) {
-    var self = this;
-    isFocusing = false;
+    var self = this
+    isFocusing = false
     if (!self.data.focus) {
       self.setData({ focus: true })
     }
   },
   //提交评论
   formSubmit: function (e) {
-    var self = this;
-    var comment = e.detail.value.inputComment;
-    var parent = self.data.parentID;
-    var postID = e.detail.value.inputPostID;    
-    var userid = self.data.userid;
+    var self = this
+    var comment = e.detail.value.inputComment
+    var parent = self.data.parentID
+    var postID = e.detail.value.inputPostID
+    var userid = self.data.userid
     if (comment.length === 0) {
       self.setData({
         'dialog.hidden': false,
         'dialog.title': '提示',
         'dialog.content': '没有填写评论内容。'
-
-      });
-    }
-    else {
+      })
+    } else {
       if (self.data.openid) {
-        var name = self.data.userInfo.nickName;
-        var author_url = self.data.userInfo.avatarUrl;
-        var email = self.data.openid + "@qq.com";
-        var openid = self.data.openid;
-     
+        var name = self.data.userInfo.nickName
+        var author_url = self.data.userInfo.avatarUrl
+        var email = self.data.openid + '@qq.com'
+        var openid = self.data.openid
+
         var data = {
           post: postID,
           author_name: name,
@@ -1025,129 +959,103 @@ hiddenBar() {
           parent: parent,
           openid: openid,
           userid: userid
-        };
-        var url = Api.postWeixinComment();
-        var postCommentRequest = wxRequest.postRequest(url, data);
-        var postCommentMessage = "";
+        }
+        var url = Api.postWeixinComment()
+        var postCommentRequest = wxRequest.postRequest(url, data)
+        var postCommentMessage = ''
         postCommentRequest
-          .then(res => {
+          .then((res) => {
             console.log(res)
-            var code =res.data.code;
-            if(res.data.code =='success')
-            {
-
-                self.setData({
-                  content: '',
-                  parentID: "0",
-                  userid: 0,
-                  placeholder: "请写下您想说的话...",
-                  focus: false,
-                  commentsList: [],
-                  target :'',
-                  focus:false,
-                  menuBackgroup: false
-
-                });
-
-                wx.showToast({
-                  title: res.data.message,
-                  mask: false,
-                  icon: "none",
-                  duration: 3000
-                });
-                postCommentMessage = res.data.message;                
-                var commentCounts = parseInt(self.data.total_comments) + 1;
-                self.setData({
-                  total_comments: commentCounts,
-                  commentCount: "有" + commentCounts + "条评论"
-
-                });
-            
-            }            
-            else {
-
-              if (res.data.code == 'rest_comment_login_required') {
-              wx.showToast({
-                title: '需要开启在WordPress rest api 的匿名评论功能！',
-                icon: 'none',
-                duration: 3000,
-                success: function () {
-                }
+            var code = res.data.code
+            if (res.data.code == 'success') {
+              self.setData({
+                content: '',
+                parentID: '0',
+                userid: 0,
+                placeholder: '请写下您想说的话...',
+                focus: false,
+                commentsList: [],
+                target: '',
+                focus: false,
+                menuBackgroup: false
               })
 
-               
-              }
-              else if (res.data.code == 'rest_invalid_param' && res.data.message.indexOf('author_email') > 0) {
+              wx.showToast({
+                title: res.data.message,
+                mask: false,
+                icon: 'none',
+                duration: 3000
+              })
+              postCommentMessage = res.data.message
+              var commentCounts = parseInt(self.data.total_comments) + 1
+              self.setData({
+                total_comments: commentCounts,
+                commentCount: '有' + commentCounts + '条评论'
+              })
+            } else {
+              if (res.data.code == 'rest_comment_login_required') {
                 wx.showToast({
-                  title:  'email填写错误！',
+                  title: '需要开启在WordPress rest api 的匿名评论功能！',
                   icon: 'none',
                   duration: 3000,
-                  success: function () {
-                  }
+                  success: function () {}
                 })
-               
-              }
-              else if (res.data.code == '87014') {
+              } else if (res.data.code == 'rest_invalid_param' && res.data.message.indexOf('author_email') > 0) {
                 wx.showToast({
-                  title:  '内容含有违法违规内容!',
+                  title: 'email填写错误！',
                   icon: 'none',
                   duration: 3000,
-                  success: function () {
-                  }
+                  success: function () {}
                 })
-               
-              }
-              else {
+              } else if (res.data.code == '87014') {
+                wx.showToast({
+                  title: '内容含有违法违规内容!',
+                  icon: 'none',
+                  duration: 3000,
+                  success: function () {}
+                })
+              } else {
                 console.log(res)
                 wx.showToast({
-                  title:  res.data.message,
+                  title: res.data.message,
                   icon: 'none',
                   duration: 3000,
-                  success: function () {
-                  }
-                })               
+                  success: function () {}
+                })
               }
             }
 
-            return res ;
-          }).then(res => {
-            
+            return res
+          })
+          .then((res) => {
             // if(res.data.code=='success' && res.data.comment_approved=="1")
-            if(res.data.code=='success')
-            {
-              
-              self.fristOpenComment();  
+            if (res.data.code == 'success') {
+              self.fristOpenComment()
             }
-                     
-          }).catch(response => {
+          })
+          .catch((response) => {
             console.log(response)
             wx.showToast({
-              title:  '评论失败:'+response,
+              title: '评论失败:' + response,
               icon: 'none',
               duration: 3000,
-              success: function () {
-              }
-            })  
+              success: function () {}
+            })
           })
-      }
-      else {
+      } else {
         Auth.loginType(this)
-
       }
-
     }
-
   },
   agreeGetUser: function (e) {
-    let self = this;
-    Auth.checkAgreeGetUser(e, app, self, '0');;
-
+    let self = this
+    Auth.checkAgreeGetUser(e, app, self, '0')
   },
   closeLoginPopup() {
-    this.setData({ isLoginPopup: false });
+    this.setData({ isLoginPopup: false })
   },
   openLoginPopup() {
-    this.setData({ isLoginPopup: true });
+    this.setData({ isLoginPopup: true })
   },
   confirm: function () {
     this.setData({
@@ -1157,32 +1065,29 @@ hiddenBar() {
     })
   },
   onPosterSuccess(e) {
-    const { detail } = e;
-    this.showModal(detail);
+    const { detail } = e
+    this.showModal(detail)
   },
   onPosterFail(err) {
     wx.showToast({
       title: err,
       mask: true,
       duration: 2000
-    });
+    })
   },
 
   onCreatePoster: function () {
     if (this.data.isShareTimeline) {
-      Adapter.toast("请前往小程序使用完整服务", 3000)
+      Adapter.toast('请前往小程序使用完整服务', 3000)
       return
     }
-    var self = this;
+    var self = this
     //this.ShowHideMenu();
     if (self.data.openid) {
-      self.creatArticlePoster(self, Api, util, self.modalView, Poster);
-    }
-    else {
+      self.creatArticlePoster(self, Api, util, self.modalView, Poster)
+    } else {
       Auth.loginType(this)
-
     }
-
   },
 
   showModal: function (posterPath) {
@@ -1190,13 +1095,15 @@ hiddenBar() {
       title: '保存至相册可以分享给好友',
       confirmation: false,
       confirmationText: '',
-      inputFields: [{
-        fieldName: 'posterImage',
-        fieldType: 'Image',
-        fieldPlaceHolder: '',
-        fieldDatasource: posterPath,
-        isRequired: false,
-      }],
+      inputFields: [
+        {
+          fieldName: 'posterImage',
+          fieldType: 'Image',
+          fieldPlaceHolder: '',
+          fieldDatasource: posterPath,
+          isRequired: false
+        }
+      ],
       confirm: function (res) {
         console.log(res)
       }
@@ -1204,62 +1111,53 @@ hiddenBar() {
   },
 
   creatArticlePoster: function (appPage, api, util, modalView, poster) {
-    var postId = appPage.data.detail.id;
-    var title = appPage.data.detail.title.rendered;
-    var excerpt = appPage.data.detail.excerpt.rendered ? appPage.data.detail.excerpt.rendered : '';
+    var postId = appPage.data.detail.id
+    var title = appPage.data.detail.title.rendered
+    var excerpt = appPage.data.detail.excerpt.rendered ? appPage.data.detail.excerpt.rendered : ''
     if (excerpt && excerpt.length != 0 && excerpt != '') {
-      excerpt = util.removeHTML(excerpt);
+      excerpt = util.removeHTML(excerpt)
     }
-    var postImageUrl = "";//海报图片地址
-    var posterImagePath = "";
-    var qrcodeImagePath = "";//二维码图片的地址
-    var flag = false;
-    var imageInlocalFlag = false;
-    var downloadFileDomain = appPage.data.downloadFileDomain;
-    var logo = appPage.data.logo;
-    var defaultPostImageUrl = appPage.data.detail.postImageUrl;
-    var postImageUrl = appPage.data.detail.post_full_image;
-
+    var postImageUrl = '' //海报图片地址
+    var posterImagePath = ''
+    var qrcodeImagePath = '' //二维码图片的地址
+    var flag = false
+    var imageInlocalFlag = false
+    var downloadFileDomain = appPage.data.downloadFileDomain
+    var logo = appPage.data.logo
+    var defaultPostImageUrl = appPage.data.detail.postImageUrl
+    var postImageUrl = appPage.data.detail.post_full_image
 
     //获取文章首图临时地址，若没有就用默认的图片,如果图片不是request域名，使用本地图片
     if (postImageUrl) {
-      var n = 0;
+      var n = 0
       for (var i = 0; i < downloadFileDomain.length; i++) {
-
         if (postImageUrl.indexOf(downloadFileDomain[i]) != -1) {
-          n++;
-          break;
+          n++
+          break
         }
       }
       if (n == 0) {
-        imageInlocalFlag = true;
-        postImageUrl = defaultPostImageUrl;
-
+        imageInlocalFlag = true
+        postImageUrl = defaultPostImageUrl
       }
-
     } else {
-      postImageUrl = defaultPostImageUrl;
+      postImageUrl = defaultPostImageUrl
     }
 
-    if(!postImageUrl)
-    {
-      
+    if (!postImageUrl) {
       wx.showToast({
         title: '文章没有图片且插件未设置默认海报封面图',
         icon: 'none',
         duration: 3000,
-        success: function () {
-        }
+        success: function () {}
       })
-      return;
-
+      return
     }
     var posterConfig = {
       width: 750,
       height: 1200,
       backgroundColor: '#fff',
       debug: false
-
     }
     var blocks = [
       {
@@ -1269,7 +1167,7 @@ hiddenBar() {
         y: 183,
         borderWidth: 2,
         borderColor: '#f0c2a0',
-        borderRadius: 20,
+        borderRadius: 20
       },
       {
         width: 634,
@@ -1278,10 +1176,10 @@ hiddenBar() {
         y: 680,
         backgroundColor: '#fff',
         opacity: 0.5,
-        zIndex: 100,
+        zIndex: 100
       }
     ]
-    var texts = [];
+    var texts = []
     texts = [
       {
         x: 113,
@@ -1299,7 +1197,7 @@ hiddenBar() {
         baseLine: 'top',
         text: '发现不错的文章推荐给你',
         fontSize: 38,
-        color: '#080808',
+        color: '#080808'
       },
       {
         x: 59,
@@ -1330,25 +1228,22 @@ hiddenBar() {
         baseLine: 'top',
         text: '长按识别小程序码,立即阅读',
         fontSize: 30,
-        color: '#080808',
+        color: '#080808'
       }
-    ];
+    ]
 
-
-    posterConfig.blocks = blocks;//海报内图片的外框
-    posterConfig.texts = texts; //海报的文字
-    var url = Api.creatPoster();
-    var path = "pages/detail/detail?id=" + postId;
+    posterConfig.blocks = blocks //海报内图片的外框
+    posterConfig.texts = texts //海报的文字
+    var url = Api.creatPoster()
+    var path = 'pages/detail/detail?id=' + postId
     var data = {
       postid: postId,
       path: path
-
-    };
-    var creatPosterRequest = wxRequest.postRequest(url, data);
-    creatPosterRequest.then(res => {
+    }
+    var creatPosterRequest = wxRequest.postRequest(url, data)
+    creatPosterRequest.then((res) => {
       if (res.data.code == 'success') {
-        qrcodeImagePath = res.data.qrcodeimgUrl;
-
+        qrcodeImagePath = res.data.qrcodeimgUrl
 
         var images = [
           {
@@ -1357,150 +1252,132 @@ hiddenBar() {
             x: 32,
             y: 30,
             borderRadius: 62,
-            url: appPage.data.userInfo.avatarUrl, //用户头像
+            url: appPage.data.userInfo.avatarUrl //用户头像
           },
           {
             width: 634,
             height: 475,
             x: 59,
             y: 210,
-            url: postImageUrl,//海报主图
+            url: postImageUrl //海报主图
           },
           {
             width: 220,
             height: 220,
             x: 92,
             y: 1020,
-            url: qrcodeImagePath,//二维码的图
+            url: qrcodeImagePath //二维码的图
           }
-        ];
+        ]
 
-        posterConfig.images = images;//海报内的图片
+        posterConfig.images = images //海报内的图片
         appPage.setData({ posterConfig: posterConfig }, () => {
-          poster.create(true);    //生成海报图片
-        });
-
-      }
-      else {
+          poster.create(true) //生成海报图片
+        })
+      } else {
         wx.showToast({
           title: res.message,
           mask: true,
           duration: 2000
-        });
+        })
       }
-    });
+    })
   },
   adbinderror: function (e) {
-    var self = this;
-    console.log(e.detail.errCode);
-    console.log(e.detail.errMsg);
+    var self = this
+    console.log(e.detail.errCode)
+    console.log(e.detail.errMsg)
     if (e.detail.errCode) {
       self.setData({ detailAdsuccess: false })
-
     }
   },
 
   adTopbinderror: function (e) {
-    var self = this;
-    console.log(e.detail.errCode);
+    var self = this
+    console.log(e.detail.errCode)
     console.log(e.detail.errMsg)
     if (e.detail.errCode) {
       self.setData({ detailTopAdsuccess: false })
-
     }
   },
 
-
   loadInterstitialAd: function (excitationAdId) {
-    var self = this;
+    var self = this
     if (wx.createRewardedVideoAd) {
       rewardedVideoAd = wx.createRewardedVideoAd({ adUnitId: excitationAdId })
       rewardedVideoAd.onLoad(() => {
         console.log('onLoad event emit')
       })
       rewardedVideoAd.onError((err) => {
-        console.log(err);
+        console.log(err)
         this.setData({
           detailSummaryHeight: ''
         })
       })
       rewardedVideoAd.onClose((res) => {
-
-        var id = self.data.detail.id;
+        var id = self.data.detail.id
         if (res && res.isEnded) {
+          var nowDate = new Date()
+          nowDate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate()
 
-          var nowDate = new Date();
-          nowDate = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
-
-          var openAdLogs = wx.getStorageSync('openAdLogs') || [];
+          var openAdLogs = wx.getStorageSync('openAdLogs') || []
           // 过滤重复值
           if (openAdLogs.length > 0) {
             openAdLogs = openAdLogs.filter(function (log) {
-              return log["id"] !== id;
-            });
+              return log['id'] !== id
+            })
           }
           // 如果超过指定数量不再记录
           if (openAdLogs.length < 21) {
             var log = {
-              "id": id,
-              "date": nowDate
+              id: id,
+              date: nowDate
             }
-            openAdLogs.unshift(log);
-            wx.setStorageSync('openAdLogs', openAdLogs);
-            console.log(openAdLogs);
-
+            openAdLogs.unshift(log)
+            wx.setStorageSync('openAdLogs', openAdLogs)
+            console.log(openAdLogs)
           }
           this.setData({
             detailSummaryHeight: ''
           })
         } else {
-
           wx.showToast({
-            title: "你中途关闭了视频",
-            icon: "none",
+            title: '你中途关闭了视频',
+            icon: 'none',
             duration: 3000
-          });
-
-          
+          })
         }
       })
     }
-
   },
 
   // 阅读更多
   readMore: function () {
-    var self = this;
+    var self = this
 
     var platform = self.data.platform
     if (platform == 'devtools') {
-
       wx.showToast({
-        title: "开发工具无法显示激励视频",
-        icon: "none",
+        title: '开发工具无法显示激励视频',
+        icon: 'none',
         duration: 2000
-      });
+      })
 
       self.setData({
         detailSummaryHeight: ''
       })
-    }
-    else {
-
-      rewardedVideoAd.show()
-        .catch(() => {
-          rewardedVideoAd.load()
-            .then(() => rewardedVideoAd.show())
-            .catch(err => {
-              console.log('激励视频 广告显示失败');
-              self.setData({
-                detailSummaryHeight: ''
-              })
+    } else {
+      rewardedVideoAd.show().catch(() => {
+        rewardedVideoAd
+          .load()
+          .then(() => rewardedVideoAd.show())
+          .catch((err) => {
+            console.log('激励视频 广告显示失败')
+            self.setData({
+              detailSummaryHeight: ''
             })
-        })
-
+          })
+      })
     }
-
   }
-
 })

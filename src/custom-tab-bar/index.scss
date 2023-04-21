@@ -2,11 +2,11 @@
 
 .tab-bar {
   position: fixed;
- bottom: -20rpx;
+  bottom: -20rpx;
   left: 0;
   right: 0;
   height: 96rpx;
- 
+
   display: flex;
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -37,5 +37,4 @@
 
 .tab-bar-item view {
   font-size: 12px;
-
 }

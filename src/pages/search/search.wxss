@@ -7,11 +7,9 @@
  * Copyright (c) 2018 https://www.minapper.com All rights reserved.
  */
 
-
-
 .list-container {
   height: 100%;
-  margin-top:20rpx;
+  margin-top: 20rpx;
 }
 
 /* 搜索 */

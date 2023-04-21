@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * 微慕小程序开源版
  * author: jianbo
  * organization: 微慕  www.minapper.com
@@ -7,14 +7,14 @@
  * 技术支持微信号：iamxjb
  * 开源协议：MIT
  * Copyright (c) 2017  微慕 https://www.minapper.com All rights reserved.
- * 
+ *
  */
 
 import config from '../../utils/config.js'
-import Api from '../../utils/api.js';
-import util from '../../utils/util.js';
-var webSiteName= config.getWebsiteName;
-var domain =config.getDomain
+import Api from '../../utils/api.js'
+import util from '../../utils/util.js'
+var webSiteName = config.getWebsiteName
+var domain = config.getDomain
 
 Page({
   data: {
@@ -22,27 +22,24 @@ Page({
     pageData: {},
     pagesList: {},
     hidden: false,
-  
-    webSiteName:webSiteName,
-    domain:domain
+
+    webSiteName: webSiteName,
+    domain: domain
   },
   onLoad: function (options) {
-    this.fetchData(options.id);
+    this.fetchData(options.id)
     wxApi.showShareMenu({
-      withShareTicket:true,
-      menus:['shareAppMessage','shareTimeline'],
-      success:function(e)
-      {
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline'],
+      success: function (e) {
         //console.log(e);
       }
     })
-     
   },
-  onShareTimeline: function() {
+  onShareTimeline: function () {
     let imageUrl = this.data.pageData.post_full_image
-    if(imageUrl=='')
-    {
-      imageUrl=this.data.pageData.postImageUrl
+    if (imageUrl == '') {
+      imageUrl = this.data.pageData.postImageUrl
     }
     return {
       title: this.data.pageData.title.rendered,
@@ -52,41 +49,41 @@ Page({
       imageUrl
     }
   },
-  
+
   fetchData: function (id) {
-    var self = this;
+    var self = this
     self.setData({
       hidden: false
-    });
+    })
     wx.request({
       url: Api.getPageByID(id, { mdrender: false }),
       success: function (response) {
-        console.log(response);
+        console.log(response)
         self.setData({
-          pageData: response.data,         
-        });
+          pageData: response.data
+        })
         setTimeout(function () {
           self.setData({
             hidden: true
-          });
-        }, 300);
+          })
+        }, 300)
       }
-    });
+    })
   },
   fetchPagesData: function () {
-    var self = this;
+    var self = this
     wx.request({
       url: Api.getPages(),
       success: function (response) {
         self.setData({
           pagesList: response.data
-        });
+        })
         setTimeout(function () {
           self.setData({
             hidden: true
-          });
-        }, 300);
+          })
+        }, 300)
       }
-    });
+    })
   }
 })

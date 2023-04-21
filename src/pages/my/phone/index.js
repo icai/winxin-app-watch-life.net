@@ -2,7 +2,7 @@ Page({
   data: {
     code: '',
     ext: '',
-    showModal: false,
+    showModal: false
   },
 
   handleTap(e) {

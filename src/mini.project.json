@@ -1,5 +1,5 @@
 {
-    "component2": true,
-    "miniprogramRoot": "./",
-    "enableAppxNg": true
-  }
+  "component2": true,
+  "miniprogramRoot": "./",
+  "enableAppxNg": true
+}

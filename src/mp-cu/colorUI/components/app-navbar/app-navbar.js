@@ -1,15 +1,15 @@
 Component({
-    options: {
-        addGlobalClass: true
+  options: {
+    addGlobalClass: true
+  },
+  properties: {
+    navBg: {
+      type: String,
+      value: 'bg-blur'
     },
-    properties: {
-        navBg: {
-            type: String,
-            value: 'bg-blur'
-        },
-        title: {
-            type: String,
-            value: ''
-        }
+    title: {
+      type: String,
+      value: ''
     }
+  }
 })

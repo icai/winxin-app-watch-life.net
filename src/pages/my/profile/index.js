@@ -1,48 +1,42 @@
-const app = getApp();
+const app = getApp()
 import config from '../../../utils/config.js'
 Page({
   data: {
     userInfo: {},
     showModal: false,
-    modalTitle:'',
-    modalContent:'',
+    modalTitle: '',
+    modalContent: '',
     ext: '',
-    minapperName:config.minapperName
+    minapperName: config.minapperName
   },
 
   onLoad() {
     wx.setNavigationBarTitle({
-      title:'登录授权',
+      title: '登录授权',
       success: function (res) {
         // success
       }
-    }); 
+    })
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady() {
-
-  },
+  onReady() {},
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow() {
-
-  },
+  onShow() {},
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload() {
-
-  },
+  onUnload() {},
 
   //获取用户信息
   getUserProfile() {
-    this.login();
+    this.login()
     wx.getUserProfile({
       desc: '展示用户信息',
       success: (res) => {
@@ -58,7 +52,7 @@ Page({
         })
       },
       fail: (err) => {
-        console.log(err.errMsg, "获取用户信息失败！");
+        console.log(err.errMsg, '获取用户信息失败！')
         this.setData({
           showModal: true,
           modalTitle: '授权失败',
@@ -68,7 +62,7 @@ Page({
           })
         })
       }
-    });
+    })
   },
   //调用wx.login接口
   login() {
@@ -76,10 +70,10 @@ Page({
       success: (res) => {
         if (res.code) {
           this.setData({
-            code: res.code,
+            code: res.code
           })
-          console.log("请求wx.login成功！")
-          console.log(this.data.code);
+          console.log('请求wx.login成功！')
+          console.log(this.data.code)
         } else {
           console.log('请求wx.login失败！' + res.errMsg)
         }
@@ -94,8 +88,7 @@ Page({
   },
   //截断touchMove事件
   preventTouchMove() {},
-  launchAppError(e)
-  {
+  launchAppError(e) {
     console.log(e.detail.errMsg)
   },
   clickBtn() {

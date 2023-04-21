@@ -5,9 +5,9 @@
 }
 
 .channels-header {
-    position: relative;
-    overflow: hidden;
-    padding: 32rpx 32rpx 0;
+  position: relative;
+  overflow: hidden;
+  padding: 32rpx 32rpx 0;
 }
 
 .channels-header::before {
@@ -35,28 +35,28 @@
 }
 
 .channels-header .channels-user {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .channels-header .channels-user .channels-logo {
-    width: 120rpx;
-    height: 120rpx;
-    border-radius: 50%;
-    border: 8rpx solid #FFF;
-    box-shadow: 4px 16px 30px -8px rgba(139, 161, 185, 0.6);
-    margin-right: 40rpx;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 8rpx solid #fff;
+  box-shadow: 4px 16px 30px -8px rgba(139, 161, 185, 0.6);
+  margin-right: 40rpx;
 }
 
 .channels-header .channels-user .channels-name {
-    font-size: 36rpx;
-    font-weight: 500;
+  font-size: 36rpx;
+  font-weight: 500;
 }
 
 .channels-header .channels-user .channels-des {
-    font-size: 28rpx;
-    color: #999;
-    margin-top: 4rpx;
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 4rpx;
 }
 
 .channels-card-wrap {
@@ -84,17 +84,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg,#40d196, #64d5d9);
+  background: linear-gradient(135deg, #40d196, #64d5d9);
   margin-right: 16rpx;
 }
 
 .channels-card .channels-left.icon {
-  background: linear-gradient(135deg,#37acfc, #38d3ef);
+  background: linear-gradient(135deg, #37acfc, #38d3ef);
 }
 
 .channels-card .channels-left .iconfont {
   font-size: 30rpx;
-  color: #FFF;
+  color: #fff;
   line-height: 1;
 }
 
@@ -106,75 +106,75 @@
 
 .channels-card .channels-right {
   font-size: 24rpx;
-  color:  #999;
+  color: #999;
 }
 
 .channels-content {
   margin: 0 32rpx 32rpx;
   border-radius: 24rpx;
-  background-color: #FFF;
+  background-color: #fff;
   overflow: hidden;
 }
 
 /* 选项卡 */
 .channels-navbar {
-    height: 80rpx;
-    padding: 10rpx 0;
-    display: flex;
-    box-shadow: 0px 4px 8px #f7f7f7;
-    background: #fff;
-    position: relative;
-    border-bottom: 1rpx solid #ccc;
+  height: 80rpx;
+  padding: 10rpx 0;
+  display: flex;
+  box-shadow: 0px 4px 8px #f7f7f7;
+  background: #fff;
+  position: relative;
+  border-bottom: 1rpx solid #ccc;
 }
 
 .channels-navbar .channels-navbar-item {
-    width: 80rpx;
-    padding: 20rpx 32rpx;
-    text-align: center;
-    color: #666;
-    line-height: 1;
-    box-sizing: content-box;
+  width: 80rpx;
+  padding: 20rpx 32rpx;
+  text-align: center;
+  color: #666;
+  line-height: 1;
+  box-sizing: content-box;
 }
 
 .channels-navbar .channels-navbar-item.channels-navbar-item-on {
-    font-size: 32rpx;
-    color: #333;
+  font-size: 32rpx;
+  color: #333;
 }
 
 .channels-navbar .channels-navbar-item.channels-navbar-item-on .channels-navbar-title {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .channels-navbar .channels-navbar-slider {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 40rpx;
-    transition: all .3s;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40rpx;
+  transition: all 0.3s;
 }
 
 .channels-navbar .channels-navbar-slider::before {
-    content: '';
-    width: 48rpx;
-    height: 4rpx;
-    background-color: #333;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+  content: '';
+  width: 48rpx;
+  height: 4rpx;
+  background-color: #333;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .channels-navbar .channels-navbar-slider-0 {
-    transform: translateX(56rpx);
+  transform: translateX(56rpx);
 }
 
 .channels-navbar .channels-navbar-slider-1 {
-    transform: translateX(200rpx);
+  transform: translateX(200rpx);
 }
 
 /* 左图模式 */
 .channels-list {
-    background: #f5f7f7;
+  background: #f5f7f7;
 }
 
 .channels-list-item {
@@ -228,7 +228,7 @@
   width: 130rpx;
   height: 130rpx;
   border-radius: 50%;
-  border: 1px solid #FFF;
+  border: 1px solid #fff;
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -245,7 +245,7 @@
   border-top: 26rpx solid transparent;
   border-right: 40rpx solid transparent;
   border-bottom: 26rpx solid transparent;
-  border-left: 40rpx solid #FFF;
+  border-left: 40rpx solid #fff;
 }
 
 .channels-list-content {

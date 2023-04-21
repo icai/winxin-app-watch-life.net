@@ -32,7 +32,11 @@
   text-align: center;
 }
 
-.modal-input,.modal-input_solo,.modal-input_hd,.modal-input_bd,.modal-input_ft {
+.modal-input,
+.modal-input_solo,
+.modal-input_hd,
+.modal-input_bd,
+.modal-input_ft {
   display: flex;
   background: #fff;
   font-size: 28rpx;
@@ -42,11 +46,11 @@
 }
 
 .modal-input_solo image {
- width: 100%;
- height: 1000rpx;
+  width: 100%;
+  height: 1000rpx;
 }
 
-.modal-input_hd{
+.modal-input_hd {
   border-top: 2rpx solid #ddd;
   border-left: 2rpx solid #ddd;
   border-right: 2rpx solid #ddd;
@@ -63,7 +67,11 @@
   border-right: 2rpx solid #ddd;
   border-bottom: 2rpx solid #ddd;
 }
-.input,.input_solo,.input_hd,.input_bd,.input_texarea {
+.input,
+.input_solo,
+.input_hd,
+.input_bd,
+.input_texarea {
   width: 100%;
   height: 70rpx;
   line-height: 70rpx;
@@ -96,7 +104,6 @@
   /* border-top: 1px solid #dedede; */
   /* margin-top:60rpx; */
   background-color: #fff;
-
 }
 .btn-cancel {
   width: 50%;

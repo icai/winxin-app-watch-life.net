@@ -1,19 +1,17 @@
 Component({
-    options: {
-        addGlobalClass: true,
-        //multipleSlots: true
+  options: {
+    addGlobalClass: true
+    //multipleSlots: true
+  },
+  properties: {
+    ui: {
+      type: String,
+      value: ''
     },
-    properties: {
-        ui: {
-            type: String,
-            value: ''
-        },
-        reverse: {
-            type: Boolean,
-            value: false
-        }
-    },
-    methods: {
-
+    reverse: {
+      type: Boolean,
+      value: false
     }
+  },
+  methods: {}
 })
