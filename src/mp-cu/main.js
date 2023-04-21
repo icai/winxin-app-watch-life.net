@@ -228,11 +228,11 @@ export default class ColorUI {
         };
         store = CUStoreInit(this.config)
         if (this.config.theme === 'auto') {
-            wx.onThemeChange((res) => {
-                store.setState({sys_theme: 'auto'})
-                wx.setStorageSync('sys_theme', 'auto');
-                setStatusStyle(wx.getSystemInfoSync().theme === 'light' ? 'dark' : 'light')
-            })
+            // wx.onThemeChange((res) => {
+            //     store.setState({sys_theme: 'auto'})
+            //     wx.setStorageSync('sys_theme', 'auto');
+            //     setStatusStyle(wx.getSystemInfoSync().theme === 'light' ? 'dark' : 'light')
+            // })
         } else {
             wx.setStorageSync('sys_theme', this.config.theme)
             setStatusStyle(this.config.theme === 'light' ? 'dark' : 'light');

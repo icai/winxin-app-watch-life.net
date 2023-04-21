@@ -1,11 +1,4 @@
-<wxs module="itemOf">
-    var indexOf = function (item) {
-        return item.indexOf('/') !== -1
-    }
-    module.exports = {
-        indexOf: indexOf
-    }
-</wxs>
+<wxs src="./inline-import.wxs" module="itemOf" />
 <ui-fixed bottom placeholder bg="{{bg}}" ui="{{ui}}" noFixed="{{noFixed}}" zIndex='99'>
     <view class="ui-tabbar-box">
         <view class="ui-tabbar">
