@@ -32,62 +32,65 @@ function setInterstitialAd(pagetype) {
             res.data.enable_live_interstitial_ad;
 
           if (!adUnitId) return;
-          let interstitialAd = wx.createInterstitialAd({
-            adUnitId: adUnitId,
-          });
-          // 监听插屏错误事件
-          interstitialAd.onError((err) => {
-            console.error(err);
-          });
-          // 显示广告
-          if (interstitialAd) {
-            switch (pagetype) {
-              case "enable_index_interstitial_ad":
-                if (enable_index_interstitial_ad == "1") {
-                  enableAd = true;
-                }
-                break;
+          if (!adUnitId) return;
+          if (wx.createInterstitialAd) {
+            let interstitialAd = wx.createInterstitialAd({
+              adUnitId: adUnitId,
+            });
+            // 监听插屏错误事件
+            interstitialAd.onError((err) => {
+              console.error(err);
+            });
+            // 显示广告
+            if (interstitialAd) {
+              switch (pagetype) {
+                case "enable_index_interstitial_ad":
+                  if (enable_index_interstitial_ad == "1") {
+                    enableAd = true;
+                  }
+                  break;
 
-              case "enable_detail_interstitial_ad":
-                if (enable_detail_interstitial_ad == "1") {
-                  enableAd = true;
-                }
-                break;
+                case "enable_detail_interstitial_ad":
+                  if (enable_detail_interstitial_ad == "1") {
+                    enableAd = true;
+                  }
+                  break;
 
-              case "enable_topic_interstitial_ad":
-                if (enable_topic_interstitial_ad == "1") {
-                  enableAd = true;
-                }
-                break;
+                case "enable_topic_interstitial_ad":
+                  if (enable_topic_interstitial_ad == "1") {
+                    enableAd = true;
+                  }
+                  break;
 
-              case "enable_list_interstitial_ad":
-                if (enable_list_interstitial_ad == "1") {
-                  enableAd = true;
-                }
-                break;
+                case "enable_list_interstitial_ad":
+                  if (enable_list_interstitial_ad == "1") {
+                    enableAd = true;
+                  }
+                  break;
 
-              case "enable_hot_interstitial_ad":
-                if (enable_hot_interstitial_ad == "1") {
-                  enableAd = true;
-                }
-                break;
+                case "enable_hot_interstitial_ad":
+                  if (enable_hot_interstitial_ad == "1") {
+                    enableAd = true;
+                  }
+                  break;
 
-              case "enable_comments_interstitial_ad":
-                if (enable_comments_interstitial_ad == "1") {
-                  enableAd = true;
-                }
-                break;
+                case "enable_comments_interstitial_ad":
+                  if (enable_comments_interstitial_ad == "1") {
+                    enableAd = true;
+                  }
+                  break;
 
-              case "enable_live_interstitial_ad":
-                if (enable_live_interstitial_ad == "1") {
-                  enableAd = true;
-                }
-                break;
-            }
-            if (enableAd) {
-              interstitialAd.show().catch((err) => {
-                console.error(err);
-              });
+                case "enable_live_interstitial_ad":
+                  if (enable_live_interstitial_ad == "1") {
+                    enableAd = true;
+                  }
+                  break;
+              }
+              if (enableAd) {
+                interstitialAd.show().catch((err) => {
+                  console.error(err);
+                });
+              }
             }
           }
         });

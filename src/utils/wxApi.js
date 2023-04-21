@@ -71,11 +71,15 @@ function wxNavigateTo(url, params) {
   })
 }
 
+
+function showShareMenu(obj) {
+  return wx.showShareMenu && wx.showShareMenu(obj)
+}
+
 export default {
   wxPromisify: wxPromisify,
   wxLogin: wxLogin,
   wxGetUserInfo: wxGetUserInfo,
   wxGetSystemInfo: wxGetSystemInfo,
-
-
+  showShareMenu: showShareMenu,
 };

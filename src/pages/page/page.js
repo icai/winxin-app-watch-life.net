@@ -28,7 +28,7 @@ Page({
   },
   onLoad: function (options) {
     this.fetchData(options.id);
-    wx.showShareMenu({
+    wxApi.showShareMenu({
       withShareTicket:true,
       menus:['shareAppMessage','shareTimeline'],
       success:function(e)

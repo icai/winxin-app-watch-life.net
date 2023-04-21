@@ -49,7 +49,7 @@ Page({
             title: '专题'
         });
 
-        wx.showShareMenu({
+        wxApi.showShareMenu({
             withShareTicket:true,
             menus:['shareAppMessage','shareTimeline'],           
             })

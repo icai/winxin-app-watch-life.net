@@ -124,7 +124,7 @@ Page({
         }
       }
     })   
-    wx.showShareMenu({
+    wxApi.showShareMenu({
       withShareTicket:true,
       menus:['shareAppMessage','shareTimeline'],     
     })

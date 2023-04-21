@@ -48,7 +48,7 @@ Page({
             title: '专题'
         });
         Auth.setUserInfoData(this); 
-        wx.showShareMenu({
+        wxApi.showShareMenu({
             withShareTicket:true,
             menus:['shareAppMessage','shareTimeline'],
               
