@@ -10,5 +10,15 @@ export default defineConfig([
     name: 'wechat',
     sourceType: 'wechat',
     target: 'wechat'
+  },
+  {
+    name: 'web',
+    sourceType: 'wechat',
+    target: 'web',
+    web: {
+      emitIntermediateAssets: true,
+      responsiveRootFontSize: 16,
+      showHeader: true
+    }
   }
 ])

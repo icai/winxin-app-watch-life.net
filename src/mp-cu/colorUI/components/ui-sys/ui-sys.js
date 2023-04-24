@@ -72,6 +72,8 @@ Component({
       this.setTabBar()
     },
     loading(val) {
+      // run once
+      // if (val === this.data.loading) return
       this.setData({ isLoading: val })
       this.setLoading()
     },
@@ -114,7 +116,6 @@ Component({
       }
     },
     setLoading() {
-      console.log('setLoading')
       let _this = this,
         loading = this.data.loading
       setTimeout(() => {

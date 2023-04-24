@@ -116,7 +116,6 @@ Component({
         .in(_this)
         .select('#fixed-' + _this.data._uid)
         .boundingClientRect((data) => {
-          console.log(data, 'createSelectorQuery-data')
           if (data != null) {
             _this.setData({ content: data })
             if (_this.data.sticky) {
@@ -134,7 +133,6 @@ Component({
         .boundingClientRect()
         .selectViewport()
         .exec((data) => {
-          console.log(data, 'createSelectorQuery-data')
           if (data != null) {
             _this.setData({ content: data[0] })
             if (_this.data.sticky) {

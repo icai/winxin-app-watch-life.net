@@ -100,6 +100,9 @@ Page({
     inFinChat: false
   },
   onLoad: function (options) {
+    if (wx.canIUse('hideBackHome')) {
+      wx.hideBackHome()
+    }
     let LaunchOptions = wx.getLaunchOptionsSync()
     let scene = LaunchOptions['scene']
     let isShareTimeline = scene === 1154

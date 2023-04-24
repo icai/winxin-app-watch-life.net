@@ -197,6 +197,4 @@ function ModalViewClass() {
   return new ModalView()
 }
 
-export default {
-  ModalView: ModalViewClass
-}
+export { ModalViewClass as ModalView }

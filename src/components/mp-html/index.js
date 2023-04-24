@@ -21,8 +21,13 @@ function e(e, t, n) {
  * Author: Jin Yufeng
  */
 import t from './parser'
+import markdown from './markdown/index.js'
+import audio from './audio/index.js'
+import emoji from './emoji/index.js'
+import highlight from './highlight/index.js'
+import style from './style/index.js'
 
-var n = [require('./markdown/index.js'), require('./audio/index.js'), require('./emoji/index.js'), require('./highlight/index.js'), require('./style/index.js')]
+var n = [markdown, audio, emoji, highlight, style]
 Component({
   data: { nodes: [] },
   properties: {

@@ -74,6 +74,7 @@ Page({
     var self = this
     wx.getSystemInfo({
       success(res) {
+        // console.log(res)
         if (res.inFinChat) {
           self.setData({ inFinChat: res.inFinChat })
         } else {
